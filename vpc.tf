@@ -1,6 +1,8 @@
 data "aws_availability_zones" "available" {
   state = "available"
 }
+
+#vpc 생성
 resource "aws_vpc" "new_vpc" {
   cidr_block  = "192.168.0.0/16"
   enable_dns_hostnames = true
@@ -82,3 +84,4 @@ resource "aws_route_table_association" "new_public_subnet_2d_association" {
   subnet_id = aws_subnet.new_public_subnet_2d.id
   route_table_id = aws_route_table.new_public_rtb.id
 }
+

@@ -51,6 +51,35 @@ resource "aws_s3_bucket_policy" "bucket-policy" {
 POLICY
   
 }
-// s3 버킷 삭제
+
+// RDS 접근 권한을 정의하는 정책 생성
+resource "aws_iam_policy" "rds_access_policy" {
+  name        = "RDSAccessPolicy"
+  description = "Policy to allow RDS subnet group creation and management"
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "rds:CreateDBSubnetGroup",
+          "rds:DescribeDBSubnetGroups",
+          "rds:ModifyDBSubnetGroup",
+          "rds:DeleteDBSubnetGroup",
+          "rds:CreateDBInstance",
+          "rds:DeleteDBInstance",
+          "rds:DescribeDBInstances"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+// 사용자에게 위에서 생성한 정책을 연결
+resource "aws_iam_user_policy_attachment" "attach_rds_access_policy" {
+  user       = "minyeong"
+  policy_arn = aws_iam_policy.rds_access_policy.arn
+}
 
 
